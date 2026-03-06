@@ -101,64 +101,70 @@
 
             <!-- Profile & Projects Grid -->
             <div class="glass-panel flex-1 rounded-[2.5rem] p-6 lg:p-12 overflow-y-auto mb-8 shadow-2xl">
-                <div id="contentProfile" class="grid grid-cols-1 xl:grid-cols-2 gap-12 animate-enter">
-                    <!-- Left: Profile Info -->
-                    <div>
-                        <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Profile Info</h2>
-                        <div class="flex items-center gap-6 mb-10">
-                            <div class="w-24 h-24 rounded-full border-4 border-blue-600/30 p-1">
-                                <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" id="avatarImg" class="w-full h-full rounded-full object-cover shadow-2xl">
-                            </div>
-                            <div>
-                                <h1 id="userName" class="text-3xl font-black mb-1">Nombre Usuario</h1>
-                                <p id="userRole" class="text-blue-400 font-bold text-sm">Miembro Registrado</p>
-                                <p id="userLocation" class="text-slate-500 text-xs font-medium uppercase mt-1">País, Ciudad</p>
-                            </div>
+                <div id="contentProfile" class="animate-enter">
+                    <!-- Profile Info Header -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 mb-12 pb-8 border-b border-white/5">
+                        <div class="w-28 h-28 rounded-full border-4 border-blue-600/30 p-1">
+                            <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" id="avatarImg" class="w-full h-full rounded-full object-cover shadow-2xl">
                         </div>
-
-                        <div class="space-y-4">
-                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-blue-600/20 p-3 rounded-xl"><i data-lucide="mail" class="w-5 h-5 text-blue-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Email</p>
-                                    <p id="profEmail" class="font-bold">---</p>
-                                </div>
-                            </div>
-                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-purple-600/20 p-3 rounded-xl"><i data-lucide="phone" class="w-5 h-5 text-purple-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Phone</p>
-                                    <p id="profPhone" class="font-bold">---</p>
-                                </div>
-                            </div>
-                             <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-emerald-600/20 p-3 rounded-xl"><i data-lucide="landmark" class="w-5 h-5 text-emerald-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Banking</p>
-                                    <p id="profBankInfo" class="font-bold">---</p>
-                                </div>
+                        <div class="text-center md:text-left">
+                            <h1 id="userName" class="text-4xl font-black mb-1">Nombre Usuario</h1>
+                            <p id="userRole" class="text-blue-400 font-bold text-sm tracking-widest uppercase mb-2">Miembro Registrado</p>
+                            <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                                <span class="flex items-center gap-2 text-slate-500 text-xs font-bold bg-white/5 px-3 py-1.5 rounded-lg">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i> <span id="userLocation">País</span>
+                                </span>
+                                <span class="flex items-center gap-2 text-slate-500 text-xs font-bold bg-white/5 px-3 py-1.5 rounded-lg">
+                                    <i data-lucide="send" class="w-3.5 h-3.5 text-blue-400"></i> <span id="userTelegram">@usuario</span>
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right: Registered Projects -->
-                    <div>
-                        <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Registered Projects</h2>
-                        <div class="space-y-4" id="projectList">
-                            <!-- Project Item -->
-                            <div class="glass-card p-6 rounded-2xl flex items-center justify-between border-l-4 border-emerald-500">
-                                <div>
-                                    <h4 class="font-bold text-lg">Formulario Total 2026</h4>
-                                    <p class="text-xs text-slate-500">Registro verificado por Paymaster</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- Left: Personal Details -->
+                        <div class="space-y-6">
+                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Información Personal</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Cédula / DNI</p>
+                                    <p id="profId" class="font-bold text-blue-100">---</p>
                                 </div>
-                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase rounded-lg border border-emerald-500/30">Completed</span>
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Teléfono</p>
+                                    <p id="profPhone" class="font-bold text-blue-100">---</p>
+                                </div>
+                                <div class="glass-card p-5 rounded-2xl sm:col-span-2">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Correo Electrónico</p>
+                                    <p id="profEmail" class="font-bold text-blue-100">---</p>
+                                </div>
                             </div>
-                            <div class="glass-card p-6 rounded-2xl flex items-center justify-between border-l-4 border-amber-500 opacity-50">
-                                <div>
-                                    <h4 class="font-bold text-lg">Próximos Proyectos</h4>
-                                    <p class="text-xs text-slate-500">Esperando convocatoria</p>
+                        </div>
+
+                        <!-- Right: Banking Details -->
+                        <div class="space-y-6">
+                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Información Bancaria</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Banco</p>
+                                    <p id="profBank" class="font-bold text-emerald-400">---</p>
                                 </div>
-                                <span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase rounded-lg border border-amber-500/30">Pending</span>
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Tipo de Cuenta</p>
+                                    <p id="profType" class="font-bold text-emerald-400 text-sm">---</p>
+                                </div>
+                                <div class="glass-card p-5 rounded-2xl sm:col-span-2">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Número de Cuenta</p>
+                                    <p id="profAccount" class="font-bold text-emerald-100 text-lg tracking-wider">---</p>
+                                </div>
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">SWIFT / IBAN</p>
+                                    <p id="profSwift" class="font-bold text-slate-300 text-sm">---</p>
+                                </div>
+                                <div class="glass-card p-5 rounded-2xl">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Agencia / Sucursal</p>
+                                    <p id="profAgency" class="font-bold text-slate-300 text-xs">---</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,11 +203,22 @@
             loginSection.classList.add('hidden');
             portalSection.classList.remove('hidden');
             
+            // Personal
             document.getElementById('userName').innerText = user.name;
             document.getElementById('profEmail').innerText = user.email;
             document.getElementById('profPhone').innerText = user.phone;
-            document.getElementById('profBankInfo').innerText = `${user.bank} - ${user.account}`;
-            document.getElementById('userLocation').innerText = `${user.country}`;
+            document.getElementById('profId').innerText = user.id;
+            document.getElementById('userTelegram').innerText = user.username || 'N/A';
+            
+            // Banking
+            document.getElementById('profBank').innerText = user.bank;
+            document.getElementById('profAccount').innerText = user.account;
+            document.getElementById('profType').innerText = user.type;
+            document.getElementById('profSwift').innerText = user.swift;
+            document.getElementById('profAgency').innerText = user.agency;
+            document.getElementById('userLocation').innerText = user.country;
+            
+            // Summary
             document.getElementById('statTotal').innerText = `$ ${user.amount}`;
             document.getElementById('avatarImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2563eb&color=fff&size=200`;
             
@@ -244,5 +261,5 @@
 
         lucide.createIcons();
     </script>
-</body> 
+</body>
 </html>
