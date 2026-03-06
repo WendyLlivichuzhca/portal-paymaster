@@ -8,28 +8,27 @@ def generate():
             data = json.load(f)
         
         # Process data for the portal
-        # We include more fields now for the Profile view
+        # We include ALL fields from the Excel for complete Profile view
         processed_data = []
         for r in data:
             item = {
-                'email': str(r.get('CORREO', '')).strip().lower(),
-                'name': str(r.get('NOMBRE', '')).strip(),
-                'id': str(r.get('CEDULA/DNI', '')).strip(),
-                'phone': str(r.get('TELEFONO', '')).strip(),
-                'username': str(r.get('USUARIO', '')).strip(),
-                'bank': str(r.get('BANCO', '')).strip(),
-                'country': str(r.get('PAIS', '')).strip(),
-                'agency': str(r.get('AGENCIA', '')).strip() if r.get('AGENCIA') else 'N/A',
-                'swift': str(r.get('SWIFT/IBAN', '')).strip(),
-                'account': str(r.get('CUENTA', '')).strip(),
-                'type': str(r.get('TIPO', '')).strip(),
-                'amount': str(r.get('MONTO', '')).strip()
+                'email': str(r.get('Correo electrónico', '') or r.get('Dirección de correo electrónico', '')).strip().lower(),
+                'name': str(r.get('Nombres y Apellidos', '')).strip(),
+                'id': str(r.get('Cédula de identidad (DNI)', '')).strip(),
+                'phone': str(r.get('Nro teléfono con identificador del país (+57 3809080706)', '')).strip(),
+                'username': str(r.get('Usuario de telegram', '')).strip(),
+                'bank': str(r.get('Nombre del banco (del País donde vives)', '')).strip(),
+                'country': str(r.get('País', '')).strip(),
+                'agency': str(r.get('Agencia', '')).strip() if r.get('Agencia') else 'N/A',
+                'swift': str(r.get('Código Swift/IBAN', '')).strip(),
+                'account': str(r.get('Número de cuenta bancaria FIAT (debe estar a tu nombre)', '')).strip(),
+                'type': str(r.get('Tipo de Cuenta (Ahorros/Corriente)', '')).strip(),
+                'amount': str(r.get('Monto del Aporte Voluntario (USD)', '')).strip(),
+                # Additional fields for complete profile
+                'email_full': str(r.get('Dirección de correo electrónico', '')).strip(),
+                'email_alt': str(r.get('Correo electrónico', '')).strip()
             }
-            # Add secondary email if it exists and is different
-            email2 = str(r.get('CORREO.1', '')).strip().lower()
-            if email2 and email2 != item['email']:
-                item['email2'] = email2
-                
+
             processed_data.append(item)
         
         data_json_string = json.dumps(processed_data, ensure_ascii=False)
@@ -137,64 +136,152 @@ def generate():
 
             <!-- Profile & Projects Grid -->
             <div class="glass-panel flex-1 rounded-[2.5rem] p-6 lg:p-12 overflow-y-auto mb-8 shadow-2xl">
-                <div id="contentProfile" class="grid grid-cols-1 xl:grid-cols-2 gap-12 animate-enter">
-                    <!-- Left: Profile Info -->
-                    <div>
-                        <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Profile Info</h2>
-                        <div class="flex items-center gap-6 mb-10">
-                            <div class="w-24 h-24 rounded-full border-4 border-blue-600/30 p-1">
-                                <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" id="avatarImg" class="w-full h-full rounded-full object-cover shadow-2xl">
-                            </div>
-                            <div>
-                                <h1 id="userName" class="text-3xl font-black mb-1">Nombre Usuario</h1>
-                                <p id="userRole" class="text-blue-400 font-bold text-sm">Miembro Registrado</p>
-                                <p id="userLocation" class="text-slate-500 text-xs font-medium uppercase mt-1">País, Ciudad</p>
+                <!-- Two Column Layout for Desktop -->
+                <div id="contentProfile" class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-enter">
+                    
+                    <!-- Left Column: Profile Header & Contact (Wider) -->
+                    <div class="lg:col-span-2">
+                        <!-- Profile Header -->
+                        <div class="mb-8">
+                            <div class="flex items-end gap-6 mb-8 pb-8 border-b border-slate-600/30">
+                                <div class="w-28 h-28 rounded-2xl border-4 border-blue-600/50 p-1 shadow-lg shadow-blue-600/20">
+                                    <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" id="avatarImg" class="w-full h-full rounded-xl object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h1 id="userName" class="text-4xl font-black">Nombre Usuario</h1>
+                                        <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-black uppercase rounded-lg border border-blue-500/30">
+                                            Verificado
+                                        </span>
+                                    </div>
+                                    <p id="userLocation" class="text-slate-400 text-sm font-medium">País</p>
+                                    <p class="text-xs text-slate-500 mt-1">Miembro Registrado • Paymaster Portal</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-blue-600/20 p-3 rounded-xl"><i data-lucide="mail" class="w-5 h-5 text-blue-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Email</p>
-                                    <p id="profEmail" class="font-bold">---</p>
+                        <!-- Contact Information Grid -->
+                        <div class="mb-8">
+                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                <i data-lucide="contact" class="w-4 h-4"></i>
+                                Información de Contacto
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="glass-card p-4 rounded-xl hover:bg-white/5 transition-all border border-slate-600/20">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1">Email Principal</p>
+                                    <p id="profEmail" class="font-semibold text-sm text-blue-300 truncate">---</p>
+                                </div>
+                                <div class="glass-card p-4 rounded-xl hover:bg-white/5 transition-all border border-slate-600/20">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1">Email Alternativo</p>
+                                    <p id="profEmailAlt" class="font-semibold text-sm text-blue-300 truncate">---</p>
+                                </div>
+                                <div class="glass-card p-4 rounded-xl hover:bg-white/5 transition-all border border-slate-600/20">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1">Teléfono</p>
+                                    <p id="profPhone" class="font-semibold text-sm text-purple-300 truncate">---</p>
+                                </div>
+                                <div class="glass-card p-4 rounded-xl hover:bg-white/5 transition-all border border-slate-600/20">
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1">Usuario Telegram</p>
+                                    <p id="profUsername" class="font-semibold text-sm text-cyan-300 truncate">---</p>
                                 </div>
                             </div>
-                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-purple-600/20 p-3 rounded-xl"><i data-lucide="phone" class="w-5 h-5 text-purple-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Phone</p>
-                                    <p id="profPhone" class="font-bold">---</p>
-                                </div>
-                            </div>
-                             <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
-                                <div class="bg-emerald-600/20 p-3 rounded-xl"><i data-lucide="landmark" class="w-5 h-5 text-emerald-400"></i></div>
-                                <div>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase">Banking</p>
-                                    <p id="profBankInfo" class="font-bold">---</p>
+                        </div>
+
+                        <!-- Banking Information Card -->
+                        <div>
+                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
+                                <i data-lucide="landmark" class="w-4 h-4"></i>
+                                Información Bancaria
+                            </h2>
+                            <div class="glass-card p-6 rounded-2xl border border-slate-600/30 hover:border-emerald-500/30 transition-all">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Country -->
+                                    <div class="pb-4 border-b md:border-b-0 md:border-r border-slate-600/20">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">País</p>
+                                        <p id="profCountry" class="font-semibold text-green-300">---</p>
+                                    </div>
+                                    <!-- Bank -->
+                                    <div class="pb-4 border-b md:border-b-0">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">Banco</p>
+                                        <p id="profBank" class="font-semibold text-emerald-300 truncate">---</p>
+                                    </div>
+                                    <!-- Agency -->
+                                    <div class="pb-4 border-b md:border-b-0 md:border-r border-slate-600/20">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">Agencia</p>
+                                        <p id="profAgency" class="font-semibold text-teal-300 text-sm">---</p>
+                                    </div>
+                                    <!-- Account Type -->
+                                    <div class="pb-4 border-b md:border-b-0">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">Tipo de Cuenta</p>
+                                        <p id="profAccountType" class="font-semibold text-orange-300">---</p>
+                                    </div>
+                                    <!-- Account Number -->
+                                    <div class="md:col-span-2 pt-4 border-t border-slate-600/20">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">Número de Cuenta</p>
+                                        <p id="profAccount" class="font-mono text-sm font-semibold text-red-300 break-all">---</p>
+                                    </div>
+                                    <!-- Swift/IBAN -->
+                                    <div class="md:col-span-2">
+                                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-2">Código Swift/IBAN</p>
+                                        <p id="profSwift" class="font-mono text-sm font-semibold text-indigo-300">---</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right: Registered Projects -->
-                    <div>
-                        <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Registered Projects</h2>
-                        <div class="space-y-4" id="projectList">
-                            <!-- Project Item -->
-                            <div class="glass-card p-6 rounded-2xl flex items-center justify-between border-l-4 border-emerald-500">
-                                <div>
-                                    <h4 class="font-bold text-lg">Formulario Total 2026</h4>
-                                    <p class="text-xs text-slate-500">Registro verificado por Paymaster</p>
+                    <!-- Right Column: Projects & Stats -->
+                    <div class="lg:col-span-1 space-y-6">
+                        
+                        <!-- Amount Highlight Card -->
+                        <div class="glass-card p-6 rounded-2xl bg-gradient-to-br from-yellow-500/15 to-orange-500/15 border-2 border-yellow-500/30 hover:border-yellow-500/50 transition-all shadow-lg shadow-yellow-500/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <p class="text-[10px] text-slate-500 font-black uppercase">Aporte Económico</p>
+                                <div class="bg-yellow-500/30 p-2 rounded-lg">
+                                    <i data-lucide="dollar-sign" class="w-5 h-5 text-yellow-400"></i>
                                 </div>
-                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase rounded-lg border border-emerald-500/30">Completed</span>
                             </div>
-                            <div class="glass-card p-6 rounded-2xl flex items-center justify-between border-l-4 border-amber-500 opacity-50">
-                                <div>
-                                    <h4 class="font-bold text-lg">Próximos Proyectos</h4>
-                                    <p class="text-xs text-slate-500">Esperando convocatoria</p>
+                            <p id="profAmount" class="text-3xl font-black text-yellow-400">$ 0.00</p>
+                            <p class="text-xs text-yellow-300/70 mt-2">Monto registrado en el sistema</p>
+                        </div>
+
+                        <!-- Projects -->
+                        <div>
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-3 flex items-center gap-2">
+                                <i data-lucide="folder-open" class="w-4 h-4"></i>
+                                Proyectos Activos
+                            </h3>
+                            <div class="space-y-2">
+                                <div class="glass-card p-4 rounded-xl border-l-4 border-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-sm text-emerald-300">Formulario 2026</h4>
+                                            <p class="text-xs text-slate-500 mt-1">Completado</p>
+                                        </div>
+                                        <span class="px-2 py-1 bg-emerald-500/30 text-emerald-400 text-[8px] font-black rounded border border-emerald-500/50">✓</span>
+                                    </div>
                                 </div>
-                                <span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase rounded-lg border border-amber-500/30">Pending</span>
+                                <div class="glass-card p-4 rounded-xl border-l-4 border-slate-600 bg-slate-700/5 opacity-60">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-sm text-slate-400">Próximos Proyectos</h4>
+                                            <p class="text-xs text-slate-600 mt-1">Por confirmar</p>
+                                        </div>
+                                        <span class="px-2 py-1 bg-slate-600/30 text-slate-400 text-[8px] font-black rounded border border-slate-600/50">⏱</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Box -->
+                        <div class="glass-card p-5 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-green-500/30 p-3 rounded-lg">
+                                    <i data-lucide="shield-check" class="w-5 h-5 text-green-400"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase">Estado</p>
+                                    <p class="text-sm font-black text-green-400">Activo</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,17 +290,43 @@ def generate():
 
             <!-- Bottom Summary -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-enter" style="animation-delay: 0.2s">
-                <div class="gradient-blue p-8 rounded-[2rem] shadow-xl shadow-blue-900/20">
-                    <p class="text-blue-100/60 text-xs font-black uppercase mb-1">Total Monto</p>
-                    <h3 id="statTotal" class="text-4xl font-black">$ 0.00</h3>
+                <div class="gradient-blue p-8 rounded-[2rem] shadow-xl shadow-blue-900/20 hover:scale-105 transition-transform">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-white/20 p-3 rounded-xl">
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-blue-100/60 text-xs font-black uppercase">Total Aportado</p>
+                            <h3 id="statTotal" class="text-3xl font-black">$ 0.00</h3>
+                        </div>
+                    </div>
+                    <div class="w-full bg-white/20 rounded-full h-2">
+                        <div class="bg-white h-2 rounded-full" style="width: 75%"></div>
+                    </div>
                 </div>
-                <div class="glass-panel p-8 rounded-[2rem]">
-                    <p class="text-slate-500 text-xs font-black uppercase mb-1">Active Projects</p>
-                    <h3 class="text-4xl font-black">1</h3>
+                <div class="glass-panel p-8 rounded-[2rem] hover:bg-white/5 transition-all border border-slate-600/30">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-slate-600/30 p-3 rounded-xl">
+                            <i data-lucide="folder-open" class="w-6 h-6 text-slate-400"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-slate-500 text-xs font-black uppercase">Proyectos Activos</p>
+                            <h3 class="text-3xl font-black">1</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500">Proyecto completado exitosamente</p>
                 </div>
-                <div class="gradient-green p-8 rounded-[2rem] shadow-xl shadow-emerald-900/20">
-                    <p class="text-emerald-100/60 text-xs font-black uppercase mb-1">Status</p>
-                    <h3 class="text-4xl font-black uppercase">Active</h3>
+                <div class="gradient-green p-8 rounded-[2rem] shadow-xl shadow-emerald-900/20 hover:scale-105 transition-transform">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-white/20 p-3 rounded-xl">
+                            <i data-lucide="user-check" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-emerald-100/60 text-xs font-black uppercase">Estado</p>
+                            <h3 class="text-3xl font-black uppercase">Activo</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-100/60">Membresía verificada</p>
                 </div>
             </div>
         </main>
@@ -232,15 +345,28 @@ def generate():
         function initPortal(user) {
             loginSection.classList.add('hidden');
             portalSection.classList.remove('hidden');
-            
+
+            // Basic info
             document.getElementById('userName').innerText = user.name;
-            document.getElementById('profEmail').innerText = user.email;
-            document.getElementById('profPhone').innerText = user.phone;
-            document.getElementById('profBankInfo').innerText = `${user.bank} - ${user.account}`;
             document.getElementById('userLocation').innerText = `${user.country}`;
-            document.getElementById('statTotal').innerText = `$ ${user.amount}`;
+
+            // All profile fields
+            document.getElementById('profEmail').innerText = user.email_full || user.email;
+            document.getElementById('profEmailAlt').innerText = user.email_alt || 'N/A';
+            document.getElementById('profPhone').innerText = user.phone || 'N/A';
+            document.getElementById('profUsername').innerText = user.username || 'N/A';
+            document.getElementById('profCountry').innerText = user.country || 'N/A';
+            document.getElementById('profBank').innerText = user.bank || 'N/A';
+            document.getElementById('profAgency').innerText = user.agency || 'N/A';
+            document.getElementById('profAccountType').innerText = user.type || 'N/A';
+            document.getElementById('profAccount').innerText = user.account || 'N/A';
+            document.getElementById('profSwift').innerText = user.swift || 'N/A';
+            document.getElementById('profAmount').innerText = `$ ${user.amount}` || '$ 0.00';
+
+            // Avatar and stats
+            document.getElementById('statTotal').innerText = `$ ${user.amount}` || '$ 0.00';
             document.getElementById('avatarImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2563eb&color=fff&size=200`;
-            
+
             lucide.createIcons();
         }
 
