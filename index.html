@@ -3,366 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Portal - Paymaster</title>
+    <title>Paymaster - Portal de Usuario Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg-dark: #020617;
+            --card-glass: rgba(15, 23, 42, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
         body { 
             font-family: 'Outfit', sans-serif; 
-            background: #0f172a; 
-            background: radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 100%);
+            background: var(--bg-dark); 
             color: #f8fafc; 
-            min-height: screen;
+            min-height: 100vh;
+            overflow-x: hidden;
             margin: 0;
         }
-        .bg-mesh { 
+
+        .animated-mesh {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0, transparent 50%), 
-                        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0, transparent 50%);
+            background: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.05) 0, transparent 50%);
+            animation: mesh-move 20s ease infinite alternate;
         }
-        .sidebar { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border-right: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-panel { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .active-nav { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-left: 3px solid #3b82f6; }
-        .gradient-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .gradient-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .gradient-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .animate-enter { animation: enter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+        @keyframes mesh-move {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .glass-panel { 
+            background: var(--card-glass); 
+            backdrop-filter: blur(24px); 
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+        }
+
+        .animate-in {
+            animation: slide-up 0.8s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
     </style>
 </head>
-<body class="flex min-h-screen overflow-x-hidden">
-    <div class="bg-mesh"></div>
+<body class="flex flex-col min-h-screen">
+    <div class="animated-mesh"></div>
 
-    <!-- LOGIN OVERLAY -->
-    <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#0f172a] animate-enter">
-        <div class="w-full max-w-md">
-            <div class="text-center mb-8">
-                <div class="inline-flex p-4 bg-blue-600/20 rounded-2xl mb-4">
-                    <i data-lucide="shield-check" class="w-12 h-12 text-blue-500"></i>
+    <!-- LOGIN SCREEN -->
+    <div id="loginSection" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950 animate-in">
+        <div class="w-full max-w-lg">
+            <div class="text-center mb-10">
+                <div class="inline-flex p-5 bg-blue-600/10 rounded-3xl mb-6 border border-blue-500/20">
+                    <i data-lucide="shield-check" class="w-16 h-16 text-blue-500"></i>
                 </div>
-                <h1 class="text-4xl font-extrabold mb-2 underline decoration-blue-500 underline-offset-8">LOGIN</h1>
-                <p class="text-slate-400 font-medium mt-4">Accede a tu Portal de Usuario</p>
+                <h1 class="text-5xl font-black mb-3 gradient-text tracking-tighter">BIENVENIDO</h1>
+                <p class="text-slate-400 text-lg font-medium">Accede a tu Portal Oficial de Paymaster</p>
             </div>
-            <div class="glass-panel rounded-[2rem] p-8 shadow-2xl">
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Correo Electrónico</label>
-                        <input type="email" id="loginEmail" class="w-full px-5 py-4 glass-card rounded-2xl outline-none focus:border-blue-500 transition-all" placeholder="ejemplo@correo.com">
+
+            <div class="glass-panel rounded-[2.5rem] p-10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i data-lucide="lock" class="w-32 h-32 text-white"></i>
+                </div>
+                
+                <div class="space-y-8 relative z-10">
+                    <div class="group">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-3 px-1 transition-colors group-focus-within:text-blue-400">Correo Electrónico</label>
+                        <div class="relative">
+                            <i data-lucide="mail" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500"></i>
+                            <input type="email" id="loginEmail" class="w-full pl-14 pr-6 py-5 glass-card rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg" placeholder="ejemplo@correo.com">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Cédula / DNI</label>
-                        <input type="password" id="loginId" class="w-full px-5 py-4 glass-card rounded-2xl outline-none focus:border-blue-500 transition-all" placeholder="••••••••">
+
+                    <div class="group">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-3 px-1 transition-colors group-focus-within:text-blue-400">Cédula / DNI / Identificación</label>
+                        <div class="relative">
+                            <i data-lucide="fingerprint" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500"></i>
+                            <input type="password" id="loginId" class="w-full pl-14 pr-6 py-5 glass-card rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg" placeholder="••••••••••••">
+                        </div>
                     </div>
-                    <button id="loginBtn" class="w-full gradient-blue text-white font-bold py-4 rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]">
-                        ENTRAR
+
+                    <button id="loginBtn" class="w-full btn-primary text-white font-black py-5 rounded-2xl shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98] text-xl tracking-wide flex items-center justify-center gap-3">
+                        ACCEDER AL PORTAL
+                        <i data-lucide="arrow-right" class="w-6 h-6"></i>
                     </button>
+                    
+                    <div id="loginError" class="hidden mt-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-center text-rose-400 text-sm font-bold animate-pulse">
+                        <i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>
+                        Datos incorrectos. Verifica tu información.
+                    </div>
                 </div>
-                <div id="loginError" class="hidden mt-4 text-center text-rose-400 text-sm font-bold">Datos incorrectos. Revisa tu correo o ID.</div>
             </div>
+            
+            <p class="mt-8 text-center text-slate-600 text-sm font-medium">
+                © 2026 Paymaster Infrastructure • Asegurado con encriptación de grado militar
+            </p>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD (HIDDEN) -->
-    <div id="portalSection" class="hidden flex w-full">
-        <!-- Sidebar -->
-        <aside class="sidebar w-64 flex-shrink-0 hidden lg:flex flex-col p-6">
-            <div class="flex items-center gap-3 mb-12 px-2">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <i data-lucide="hexagon" class="w-5 h-5 text-white"></i>
+    <!-- MAIN PORTAL -->
+    <div id="portalSection" class="hidden flex w-full flex-col lg:flex-row min-h-screen">
+        <!-- Persistent Sidebar -->
+        <aside class="sidebar w-full lg:w-80 flex-shrink-0 flex flex-col glass-panel lg:border-r border-slate-800 lg:h-screen lg:fixed lg:left-0 lg:top-0">
+            <div class="p-8">
+                <div class="flex items-center gap-4 mb-12">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <span class="block font-black text-2xl tracking-tighter leading-none">PAYMASTER</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Portal Oficial</span>
+                    </div>
                 </div>
-                <span class="font-extrabold text-xl tracking-tight">USER PORTAL</span>
+                
+                <nav class="space-y-3">
+                    <button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black transition-all bg-blue-600/10 text-blue-400 border border-blue-500/20">
+                        <i data-lucide="user" class="w-5 h-5"></i> Mi Perfil
+                    </button>
+                    <button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                        <i data-lucide="clipboard-list" class="w-5 h-5"></i> Mis Trámites
+                    </button>
+                    <button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                        <i data-lucide="shield" class="w-5 h-5"></i> Seguridad
+                    </button>
+                </nav>
             </div>
-            
-            <nav class="flex-1 space-y-2">
-                <button id="navProfile" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all active-nav">
-                    <i data-lucide="user" class="w-5 h-5"></i> Perfil
-                </button>
-                <button id="navProjects" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-slate-400 hover:bg-white/5">
-                    <i data-lucide="layout" class="w-5 h-5"></i> Proyectos
-                </button>
-            </nav>
 
-            <button id="logoutBtn" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-rose-400 font-bold transition-all mt-auto">
-                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-            </button>
+            <div class="mt-auto p-8 pt-0">
+                <button id="logoutBtn" class="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 hover:text-rose-400 hover:border-rose-500/30 transition-all font-black">
+                    Cerrar Sesión
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </button>
+            </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-4 lg:p-10 flex flex-col max-w-7xl mx-auto w-full">
-            <!-- Topbar Mobile -->
-            <div class="lg:hidden flex items-center justify-between mb-8 glass-panel p-4 rounded-2xl">
-                <span class="font-black text-blue-500">PAYMASTER</span>
-                <button id="mobileLogout" class="text-rose-400 p-2"><i data-lucide="log-out" class="w-6 h-6"></i></button>
-            </div>
+        <!-- Dynamic Content Area -->
+        <main class="flex-1 lg:ml-80 p-4 md:p-8 lg:p-12 overflow-y-auto w-full">
+            <div class="max-w-6xl mx-auto space-y-10 animate-in">
+                
+                <!-- Profile Identity Section -->
+                <div class="glass-panel rounded-[3rem] p-8 md:p-12 relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px]"></div>
+                    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-600/5 rounded-full blur-[100px]"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-10">
+                        <div class="relative group">
+                            <div class="w-40 h-40 rounded-[2.5rem] border-8 border-slate-900 shadow-2xl overflow-hidden ring-4 ring-blue-500/30">
+                                <img src="" id="avatarImg" class="w-full h-full object-cover transition-transform group-hover:scale-110">
+                            </div>
+                            <div class="absolute -bottom-3 -right-3 bg-emerald-500 p-3 rounded-2xl border-4 border-slate-900 shadow-xl">
+                                <i data-lucide="check" class="w-6 h-6 text-white"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
+                                <h2 id="userName" class="text-4xl md:text-6xl font-black tracking-tight gradient-text leading-none">---</h2>
+                                <span class="px-5 py-2 bg-blue-500/10 text-blue-400 text-xs font-black uppercase rounded-full border border-blue-500/20 tracking-tighter">
+                                    Usuario Verificado
+                                </span>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-6 text-slate-400">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
+                                    <span id="userLocation" class="font-bold">---</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="award" class="w-4 h-4 text-emerald-500"></i>
+                                    <span class="font-bold">Miembro Senior</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-amber-500"></i>
+                                    <span class="font-bold uppercase text-[10px]">Registro: 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Profile & Projects Grid -->
-            <div class="glass-panel flex-1 rounded-[2.5rem] p-6 lg:p-12 overflow-y-auto mb-8 shadow-2xl">
-                <div id="contentProfile" class="grid grid-cols-1 xl:grid-cols-2 gap-12 animate-enter">
-                    <!-- Left: Profile Info -->
-                    <div class="space-y-8">
-                        <!-- Header Section -->
-                        <div>
-                            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-8">Información Personal</h2>
-                            <div class="flex items-center gap-6 mb-8">
-                                <div class="w-20 h-20 rounded-full border-4 border-blue-600/30 p-1">
-                                    <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" id="avatarImg" class="w-full h-full rounded-full object-cover shadow-2xl">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600/10 to-transparent border-l-4 border-l-blue-500">
+                        <div class="flex justify-between items-start mb-6">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Aporte Voluntario</p>
+                            <div class="bg-blue-500/20 p-3 rounded-2xl"><i data-lucide="dollar-sign" class="w-6 h-6 text-blue-400"></i></div>
+                        </div>
+                        <h3 id="profAmount" class="text-5xl font-black text-blue-400 tracking-tight">$ 0.00</h3>
+                        <p class="text-xs text-slate-500 mt-4 font-medium italic">Monto total registrado en el sistema</p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-600/10 to-transparent border-l-4 border-l-emerald-500">
+                        <div class="flex justify-between items-start mb-6">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Estado Operativo</p>
+                            <div class="bg-emerald-500/20 p-3 rounded-2xl"><i data-lucide="activity" class="w-6 h-6 text-emerald-400"></i></div>
+                        </div>
+                        <h3 class="text-5xl font-black text-emerald-400 tracking-tight">ACTIVO</h3>
+                        <p class="text-xs text-slate-500 mt-4 font-medium italic">Tu cuenta está en pleno funcionamiento</p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2.5rem] bg-gradient-to-br from-amber-600/10 to-transparent border-l-4 border-l-amber-500">
+                        <div class="flex justify-between items-start mb-6">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Proyectos Activos</p>
+                            <div class="bg-amber-500/20 p-3 rounded-2xl"><i data-lucide="folder" class="w-6 h-6 text-amber-400"></i></div>
+                        </div>
+                        <h3 class="text-5xl font-black text-amber-400 tracking-tight">01</h3>
+                        <p class="text-xs text-slate-500 mt-4 font-medium italic">Formulario General 2026 completado</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Info Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <!-- Contact Column -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3 px-2">
+                            <i data-lucide="user-plus" class="w-5 h-5 text-blue-500"></i>
+                            <h4 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Información de Contacto</h4>
+                        </div>
+                        <div class="glass-card p-4 rounded-3xl flex items-center gap-5">
+                            <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800"><i data-lucide="mail" class="w-5 h-5 text-blue-400"></i></div>
+                            <div class="overflow-hidden">
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-1">Email Principal</p>
+                                <p id="profEmail" class="font-bold text-slate-200 truncate">---</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-4 rounded-3xl flex items-center gap-5">
+                            <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800"><i data-lucide="at-sign" class="w-5 h-5 text-blue-400"></i></div>
+                            <div class="overflow-hidden">
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-1">Email Alternativo</p>
+                                <p id="profEmailAlt" class="font-bold text-slate-200 truncate">---</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-4 rounded-3xl flex items-center gap-5">
+                            <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800"><i data-lucide="phone" class="w-5 h-5 text-emerald-400"></i></div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-1">Teléfono Móvil</p>
+                                <p id="profPhone" class="font-bold text-slate-200">---</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-4 rounded-3xl flex items-center gap-5">
+                            <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800"><i data-lucide="send" class="w-5 h-5 text-sky-400"></i></div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-1">Telegram Handle</p>
+                                <p id="profUsername" class="font-bold text-slate-200">---</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banking Column -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3 px-2">
+                            <i data-lucide="landmark" class="w-5 h-5 text-emerald-500"></i>
+                            <h4 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Detalles de Transferencia</h4>
+                        </div>
+                        <div class="glass-panel rounded-[2rem] p-8 space-y-8">
+                            <div class="grid grid-cols-2 gap-8">
+                                <div>
+                                    <p class="text-[10px] font-black text-slate-600 uppercase mb-2">Entidad Bancaria</p>
+                                    <p id="profBank" class="text-lg font-black text-emerald-400">---</p>
+                                    <p id="profAgency" class="text-xs font-bold text-slate-500 mt-1">Agencia: ---</p>
                                 </div>
                                 <div>
-                                    <h1 id="userName" class="text-2xl font-black mb-1">Nombre Usuario</h1>
-                                    <p id="userRole" class="text-blue-400 font-bold text-sm">Miembro Registrado</p>
-                                    <p id="userLocation" class="text-slate-500 text-xs font-medium uppercase mt-1">País</p>
+                                    <p class="text-[10px] font-black text-slate-600 uppercase mb-2">Tipo de Cuenta</p>
+                                    <p id="profAccountType" class="text-lg font-black text-slate-200 uppercase">---</p>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Contact Information -->
-                        <div>
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                <i data-lucide="user" class="w-4 h-4"></i>
-                                Información de Contacto
-                            </h3>
-                            <div class="grid grid-cols-1 gap-3">
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-blue-600/20 p-2 rounded-lg"><i data-lucide="mail" class="w-4 h-4 text-blue-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Email Principal</p>
-                                        <p id="profEmail" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-blue-500/20 p-2 rounded-lg"><i data-lucide="mail" class="w-4 h-4 text-blue-300"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Email Alternativo</p>
-                                        <p id="profEmailAlt" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-purple-600/20 p-2 rounded-lg"><i data-lucide="phone" class="w-4 h-4 text-purple-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Teléfono</p>
-                                        <p id="profPhone" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-cyan-600/20 p-2 rounded-lg"><i data-lucide="message-circle" class="w-4 h-4 text-cyan-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Usuario Telegram</p>
-                                        <p id="profUsername" class="font-semibold text-sm truncate">---</p>
-                                    </div>
+                            
+                            <div class="pt-6 border-t border-slate-800">
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-3">Número de Cuenta Registrado</p>
+                                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between group">
+                                    <span id="profAccount" class="font-mono text-xl font-black text-emerald-500 tracking-wider">---</span>
+                                    <button class="p-2 hover:bg-white/5 rounded-xl transition-colors opacity-40 group-hover:opacity-100">
+                                        <i data-lucide="copy" class="w-4 h-4 text-emerald-400"></i>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Banking Information -->
-                        <div>
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                <i data-lucide="landmark" class="w-4 h-4"></i>
-                                Información Bancaria
-                            </h3>
-                            <div class="grid grid-cols-1 gap-3">
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-green-600/20 p-2 rounded-lg"><i data-lucide="map-pin" class="w-4 h-4 text-green-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">País</p>
-                                        <p id="profCountry" class="font-semibold text-sm">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-emerald-600/20 p-2 rounded-lg"><i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Banco</p>
-                                        <p id="profBank" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-teal-600/20 p-2 rounded-lg"><i data-lucide="building" class="w-4 h-4 text-teal-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Agencia</p>
-                                        <p id="profAgency" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-orange-600/20 p-2 rounded-lg"><i data-lucide="credit-card" class="w-4 h-4 text-orange-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Tipo de Cuenta</p>
-                                        <p id="profAccountType" class="font-semibold text-sm">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-red-600/20 p-2 rounded-lg"><i data-lucide="hash" class="w-4 h-4 text-red-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Número de Cuenta</p>
-                                        <p id="profAccount" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-4 rounded-xl flex items-center gap-3">
-                                    <div class="bg-indigo-600/20 p-2 rounded-lg"><i data-lucide="code" class="w-4 h-4 text-indigo-400"></i></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-[9px] text-slate-500 font-bold uppercase">Swift/IBAN</p>
-                                        <p id="profSwift" class="font-semibold text-sm truncate">---</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Contribution Amount -->
-                        <div>
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center gap-2">
-                                <i data-lucide="dollar-sign" class="w-4 h-4"></i>
-                                Aporte Económico
-                            </h3>
-                            <div class="glass-card p-6 rounded-xl bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">Monto del Aporte</p>
-                                        <p id="profAmount" class="text-2xl font-black text-yellow-400">$ ---</p>
-                                    </div>
-                                    <div class="bg-yellow-500/20 p-3 rounded-full">
-                                        <i data-lucide="dollar-sign" class="w-6 h-6 text-yellow-400"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Projects & Summary -->
-                    <div class="space-y-8">
-                        <!-- Projects Section -->
-                        <div>
-                            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Proyectos Registrados</h2>
-                            <div class="space-y-4" id="projectList">
-                                <div class="glass-card p-6 rounded-2xl border-l-4 border-emerald-500 hover:bg-emerald-500/5 transition-all">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <div class="bg-emerald-500/20 p-3 rounded-xl">
-                                                <i data-lucide="check-circle" class="w-6 h-6 text-emerald-400"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-lg">Formulario Total 2026</h4>
-                                                <p class="text-sm text-slate-500">Registro verificado por Paymaster</p>
-                                                <p class="text-xs text-emerald-400 font-medium mt-1">Estado: Activo</p>
-                                            </div>
-                                        </div>
-                                        <span class="px-4 py-2 bg-emerald-500/20 text-emerald-400 text-xs font-black uppercase rounded-lg border border-emerald-500/30">
-                                            Completado
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-6 rounded-2xl border-l-4 border-amber-500 opacity-60 hover:opacity-80 transition-all">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <div class="bg-amber-500/20 p-3 rounded-xl">
-                                                <i data-lucide="clock" class="w-6 h-6 text-amber-400"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-lg">Próximos Proyectos</h4>
-                                                <p class="text-sm text-slate-500">Esperando convocatoria oficial</p>
-                                                <p class="text-xs text-amber-400 font-medium mt-1">Estado: Pendiente</p>
-                                            </div>
-                                        </div>
-                                        <span class="px-4 py-2 bg-amber-500/20 text-amber-400 text-xs font-black uppercase rounded-lg border border-amber-500/30">
-                                            Pendiente
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Quick Stats -->
-                        <div>
-                            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Estadísticas</h2>
-                            <div class="grid grid-cols-1 gap-4">
-                                <div class="glass-card p-6 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-xs text-slate-500 font-bold uppercase">Estado de Membresía</p>
-                                            <p class="text-lg font-black text-blue-400">Activo</p>
-                                        </div>
-                                        <div class="bg-blue-500/20 p-3 rounded-full">
-                                            <i data-lucide="user-check" class="w-6 h-6 text-blue-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="glass-card p-6 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-xs text-slate-500 font-bold uppercase">Proyectos Activos</p>
-                                            <p class="text-lg font-black text-emerald-400">1</p>
-                                        </div>
-                                        <div class="bg-emerald-500/20 p-3 rounded-full">
-                                            <i data-lucide="folder-open" class="w-6 h-6 text-emerald-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ID Verification -->
-                        <div>
-                            <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Verificación</h2>
-                            <div class="glass-card p-6 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20">
-                                <div class="flex items-center gap-4">
-                                    <div class="bg-green-500/20 p-3 rounded-full">
-                                        <i data-lucide="shield-check" class="w-6 h-6 text-green-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-green-400">Identidad Verificada</h4>
-                                        <p class="text-sm text-slate-500">Tu información ha sido validada por Paymaster</p>
-                                        <div class="flex items-center gap-2 mt-2">
-                                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                                            <span class="text-xs text-green-400 font-medium">Verificado</span>
-                                        </div>
-                                    </div>
+                            <div class="pt-2">
+                                <p class="text-[10px] font-black text-slate-600 uppercase mb-3 px-1">Código SWIFT / IBAN</p>
+                                <div id="profSwift" class="px-5 py-3 glass-card rounded-2xl font-mono text-sm font-bold text-blue-400 inline-block">
+                                    ---
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Bottom Summary -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-enter" style="animation-delay: 0.2s">
-                <div class="gradient-blue p-8 rounded-[2rem] shadow-xl shadow-blue-900/20 hover:scale-105 transition-transform">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-white/20 p-3 rounded-xl">
-                            <i data-lucide="dollar-sign" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-blue-100/60 text-xs font-black uppercase">Total Aportado</p>
-                            <h3 id="statTotal" class="text-3xl font-black">$ 0.00</h3>
-                        </div>
-                    </div>
-                    <div class="w-full bg-white/20 rounded-full h-2">
-                        <div class="bg-white h-2 rounded-full" style="width: 75%"></div>
-                    </div>
-                </div>
-                <div class="glass-panel p-8 rounded-[2rem] hover:bg-white/5 transition-all border border-slate-600/30">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-slate-600/30 p-3 rounded-xl">
-                            <i data-lucide="folder-open" class="w-6 h-6 text-slate-400"></i>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-slate-500 text-xs font-black uppercase">Proyectos Activos</p>
-                            <h3 class="text-3xl font-black">1</h3>
-                        </div>
-                    </div>
-                    <p class="text-xs text-slate-500">Proyecto completado exitosamente</p>
-                </div>
-                <div class="gradient-green p-8 rounded-[2rem] shadow-xl shadow-emerald-900/20 hover:scale-105 transition-transform">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="bg-white/20 p-3 rounded-xl">
-                            <i data-lucide="user-check" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-emerald-100/60 text-xs font-black uppercase">Estado</p>
-                            <h3 class="text-3xl font-black uppercase">Activo</h3>
-                        </div>
-                    </div>
-                    <p class="text-xs text-emerald-100/60">Membresía verificada</p>
+                <!-- Footer Info -->
+                <div class="mt-12 text-center py-10 border-t border-slate-800">
+                    <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.4em]">Fin del Portal • Información Confidencial</p>
                 </div>
             </div>
         </main>
@@ -381,27 +347,27 @@
         function initPortal(user) {
             loginSection.classList.add('hidden');
             portalSection.classList.remove('hidden');
+            
+            // Re-render only needed if body has overflow hidden
+            document.body.style.overflow = 'auto';
 
-            // Basic info
+            // Mapping Data to UI
             document.getElementById('userName').innerText = user.name;
-            document.getElementById('userLocation').innerText = `${user.country}`;
-
-            // All profile fields
+            document.getElementById('userLocation').innerText = user.country;
             document.getElementById('profEmail').innerText = user.email_full || user.email;
-            document.getElementById('profEmailAlt').innerText = user.email_alt || 'N/A';
-            document.getElementById('profPhone').innerText = user.phone || 'N/A';
-            document.getElementById('profUsername').innerText = user.username || 'N/A';
-            document.getElementById('profCountry').innerText = user.country || 'N/A';
-            document.getElementById('profBank').innerText = user.bank || 'N/A';
-            document.getElementById('profAgency').innerText = user.agency || 'N/A';
-            document.getElementById('profAccountType').innerText = user.type || 'N/A';
-            document.getElementById('profAccount').innerText = user.account || 'N/A';
+            document.getElementById('profEmailAlt').innerText = user.email_alt || 'No registra';
+            document.getElementById('profPhone').innerText = user.phone || 'No registra';
+            document.getElementById('profUsername').innerText = user.username || 'No registra';
+            document.getElementById('profBank').innerText = user.bank || '---';
+            document.getElementById('profAgency').innerText = `Agencia: ${user.agency || '---'}`;
+            document.getElementById('profAccountType').innerText = user.type || 'Ahorros';
+            document.getElementById('profAccount').innerText = user.account || '---';
             document.getElementById('profSwift').innerText = user.swift || 'N/A';
-            document.getElementById('profAmount').innerText = `$ ${user.amount}` || '$ 0.00';
+            document.getElementById('profAmount').innerText = `$ ${user.amount}`;
 
-            // Avatar and stats
-            document.getElementById('statTotal').innerText = `$ ${user.amount}` || '$ 0.00';
-            document.getElementById('avatarImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2563eb&color=fff&size=200`;
+            // Avatar logic
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2563eb&color=fff&size=512&bold=true`;
+            document.getElementById('avatarImg').src = avatarUrl;
 
             lucide.createIcons();
         }
@@ -409,37 +375,28 @@
         loginBtn.addEventListener('click', () => {
             const email = loginEmail.value.trim().toLowerCase();
             const id = loginId.value.trim();
-            const user = DATA.find(u => (u.email === email || u.email2 === email) && u.id.toString() === id);
+            const user = DATA.find(u => (u.email === email || u.email_full?.toLowerCase() === email || u.email_alt?.toLowerCase() === email) && u.id.toString() === id);
             
             if (user) {
                 localStorage.setItem('paymaster_session', user.id);
                 initPortal(user);
             } else {
-                loginError.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i> No estás registrado. Espera a que te pasemos el formulario.';
                 loginError.classList.remove('hidden');
-                lucide.createIcons();
             }
         });
 
-        document.getElementById('navProjects').addEventListener('click', () => {
-             alert('Sección en desarrollo: Aquí se listarán tus proyectos futuros.');
-        });
-
-        const logoutHandler = () => {
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('paymaster_session');
             window.location.reload();
-        };
+        });
 
-        document.getElementById('logoutBtn').addEventListener('click', logoutHandler);
-        document.getElementById('mobileLogout').addEventListener('click', logoutHandler);
-
-        // Check Session
+        // Session recovery
         const saved = localStorage.getItem('paymaster_session');
         if (saved) {
             const user = DATA.find(u => u.id.toString() === saved);
             if (user) initPortal(user);
         }
-
         lucide.createIcons();
     </script>
 </body>
